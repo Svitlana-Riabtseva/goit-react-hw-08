@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact, editContact } from './operations';
 import toast, { Toaster } from 'react-hot-toast';
+import { logout } from '../auth/operations';
 
 const INITIAL_STATE = {
   contacts: {
@@ -46,6 +47,7 @@ export const contactsSlice = createSlice({
         state.contacts.loading = true;
         state.contacts.error = null;
       })
+
       .addCase(editContact.fulfilled, (state, action) => {
         state.contacts.loading = false;
         state.contacts.error = null;
@@ -61,20 +63,28 @@ export const contactsSlice = createSlice({
         state.contacts.loading = false;
         state.contacts.error = action.payload;
       })
+
       .addCase(deleteContact.pending, state => {
         state.contacts.loading = true;
         state.contacts.error = null;
       })
+
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.contacts.loading = false;
         state.contacts.error = null;
         state.contacts.items = state.contacts.items.filter(item => action.payload.id !== item.id);
         toast('Contact successfully removed');
       })
+
       .addCase(deleteContact.rejected, (state, action) => {
         state.contacts.loading = false;
         state.contacts.error = action.payload;
+      })
+      // Додано очищення контактів при logOut.fulfilled
+      .addCase(logout.fulfilled, state => {
+        state.contacts.items = [];
       }),
+
   reducers: {
     clearContacts: state => {
       state.contacts.items = [];

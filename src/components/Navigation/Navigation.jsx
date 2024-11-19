@@ -10,8 +10,12 @@ const Navigation = () => {
       <NavLink className={buildCssClasses} to="/">
         Home
       </NavLink>
+      <NavLink className={buildCssClasses} to="/contacts">
+        Contacts
+      </NavLink>
     </div>
   );
 };
 
 export default Navigation;
+
